@@ -257,14 +257,14 @@
             { name: "Barbell T-Bar Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
             
             // Added Beginner-Level Back Exercises
+            { name: "Deadlift (Light)", equipment: ["barbell"], experience: "beginner", muscleGroup: "Back", isCompound: true },
             { name: "Assisted Pull-Ups", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Back", isCompound: true },
             { name: "Machine Assisted Chin-Ups", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Back", isCompound: true },
             { name: "Dumbbell Bent-Over Rows", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
             { name: "Inverted Rows", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Back", isCompound: false },
             
             // Accessory Exercises
-            { name: "Dumbbell Bent-Over Rows", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
-            { name: "Single-Arm Dumbbell Rows", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Single-Arm Dumbbell Rows", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
             { name: "Dumbbell Deadlifts", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
             { name: "Dumbbell Romanian Deadlifts", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
             { name: "Dumbbell Reverse Fly", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
@@ -493,6 +493,7 @@
             { name: "Good Mornings", equipment: ["barbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: true },
             
             // Added Beginner-Level Hamstrings Exercises
+            { name: "Deadlift (Light)", equipment: ["barbell"], experience: "beginner", muscleGroup: "Hamstrings", isCompound: true },
             { name: "Bodyweight Good Mornings", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Hamstrings", isCompound: false },
             { name: "Dumbbell Hamstring Curl (Lying)", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Hamstrings", isCompound: false },
             { name: "Standing Dumbbell Hamstring Curl", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Hamstrings", isCompound: false },
@@ -582,7 +583,6 @@
             
             // Added Beginner-Level Abs Exercises
             { name: "Crunches", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Abs", isCompound: false },
-            { name: "Bicycle Crunches", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
             { name: "Seated Knee Tucks", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Abs", isCompound: false },
             { name: "Mountain Climbers", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Abs", isCompound: false },
             
@@ -778,7 +778,7 @@
             const requiredExercises = exercisesPerGroup[group];
             if (requiredExercises === 0) return;
 
-            // Filter exercises based on user experience level
+            // Filter exercises based on user experience level and available equipment
             const userExpLevel = experienceLevelMap[userExperience];
             let availableExercises = exercises[group].filter(ex => {
                 return equipmentOptions.includes(ex.equipment[0]) && (experienceLevelMap[ex.experience] <= userExpLevel);
@@ -793,18 +793,18 @@
 
             let groupExercises = [];
 
-            // Add compound exercises first
+            // Determine maximum number of compound exercises (max 2)
+            const maxCompound = Math.min(requiredExercises, 2);
+
+            // Add up to maxCompound compound exercises
             if (compoundExercises.length > 0) {
-                groupExercises = groupExercises.concat(shuffleArray(compoundExercises));
+                groupExercises = groupExercises.concat(shuffleArray(compoundExercises).slice(0, maxCompound));
             }
 
-            // Then add accessory exercises
+            // Add accessory exercises to fill the required number of exercises
             if (groupExercises.length < requiredExercises && accessoryExercises.length > 0) {
-                groupExercises = groupExercises.concat(shuffleArray(accessoryExercises));
+                groupExercises = groupExercises.concat(shuffleArray(accessoryExercises).slice(0, requiredExercises - groupExercises.length));
             }
-
-            // Select required number of exercises
-            groupExercises = groupExercises.slice(0, requiredExercises);
 
             selectedExercises = selectedExercises.concat(groupExercises);
         });
@@ -845,7 +845,7 @@
             return aPriority - bPriority;
         });
 
-        // Ensure that the first exercise uses the highest priority available equipment
+        // Ensure that the first exercises use the highest priority available equipment
         selectedExercises = prioritizeExercises(selectedExercises);
 
         // Assign sets and reps based on user experience level
@@ -865,10 +865,10 @@
 
         workoutPlanDiv.innerHTML = '<h2>Your Workout Plan</h2>';
 
-        selectedExercises.forEach(exercise => {
+        selectedExercises.forEach((exercise, index) => {
             workoutPlanDiv.innerHTML += `
                 <div class="exercise">
-                    <strong>${exercise.name} (${exercise.isCompound ? 'Main Compound' : 'Accessory'})</strong>
+                    <strong>${index + 1}. ${exercise.name} (${exercise.isCompound ? 'Main Compound' : 'Accessory'})</strong>
                     <span>Muscle Group: ${exercise.muscleGroup}</span>
                     <span>Equipment: ${exercise.equipment.join(', ')}</span>
                     <span>Sets: ${exercise.sets}, Reps: ${exercise.reps}</span>
