@@ -613,9 +613,61 @@
         'advanced': 3
     };
 
-    // Function to assign sets and reps based on training type, equipment, exercise type, and user experience
+    // %1RM Mapping Based on Experience Level and Reps
+    const oneRMMapping = {
+        'beginner': {
+            2: [85, 90],
+            3: [80, 85],
+            4: [80, 85],
+            5: [75, 80],
+            6: [75, 80],
+            7: [70, 75],
+            8: [70, 75],
+            9: [70, 75],
+            10: [65, 70],
+            11: [60, 65],
+            12: [55, 60],
+            13: [55, 60],
+            14: [55, 60],
+            15: [55, 60],
+        },
+        'intermediate': {
+            2: [90, 95],
+            3: [85, 90],
+            4: [85, 90],
+            5: [80, 85],
+            6: [80, 85],
+            7: [75, 80],
+            8: [75, 80],
+            9: [70, 75],
+            10: [70, 75],
+            11: [65, 70],
+            12: [60, 65],
+            13: [60, 65],
+            14: [60, 65],
+            15: [60, 65],
+        },
+        'advanced': {
+            2: [95, 100],
+            3: [90, 95],
+            4: [90, 95],
+            5: [85, 90],
+            6: [85, 90],
+            7: [80, 85],
+            8: [80, 85],
+            9: [75, 80],
+            10: [75, 80],
+            11: [70, 75],
+            12: [65, 70],
+            13: [65, 70],
+            14: [65, 70],
+            15: [65, 70],
+        }
+    };
+
+    // Function to assign sets, reps, and %1RM based on training type, equipment, exercise type, and user experience
     function getWorkoutParameters(trainingType, equipment, isCompound, userExperience) {
-        let sets, reps;
+        let sets, reps, oneRM;
 
         // Determine sets based on user experience
         if (userExperience === 'beginner') {
@@ -623,7 +675,7 @@
         } else if (userExperience === 'intermediate') {
             sets = 3;
         } else if (userExperience === 'advanced') {
-            sets = getRandomInt(4, 6);
+            sets = getRandomInt(4, 5); // Adjusted to 4-5 sets
         } else {
             sets = 3; // Default
         }
@@ -670,7 +722,32 @@
             reps = 10;
         }
 
-        return { sets, reps };
+        // Determine %1RM based on experience level and reps
+        oneRM = calculateOneRM(userExperience, reps);
+
+        return { sets, reps, oneRM };
+    }
+
+    // Function to calculate %1RM based on experience level and reps
+    function calculateOneRM(userExperience, reps) {
+        let oneRMRange = [60, 65]; // Default
+
+        // Find the closest key in oneRMMapping based on reps
+        // Handle ranges like 7-8 reps by using the upper bound
+        let repKey = reps;
+        if (reps >= 7 && reps <= 8) repKey = 8;
+        else if (reps >= 8 && reps <= 10) repKey = 10;
+        else if (reps >= 10 && reps <= 12) repKey = 12;
+        else if (reps >= 12 && reps <= 15) repKey = 15;
+        else repKey = reps;
+
+        // Ensure repKey exists in the mapping
+        if (oneRMMapping[userExperience][repKey]) {
+            oneRMRange = oneRMMapping[userExperience][repKey];
+        }
+
+        // Randomly select a %1RM within the range
+        return getRandomInt(oneRMRange[0], oneRMRange[1]);
     }
 
     // Utility function to get random integer between min and max (inclusive)
@@ -732,13 +809,11 @@
         if (timeAvailable <= 15) {
             totalExercises = 2;
         } else if (timeAvailable <= 30) {
-            totalExercises = 4;
+            totalExercises = 3;
         } else if (timeAvailable <= 45) {
-            totalExercises = 6;
-        } else if (timeAvailable <= 60) {
-            totalExercises = 7;
+            totalExercises = 4;
         } else {
-            totalExercises = 8;
+            totalExercises = 5; // Adjusted to 5 exercises for 46+ minutes
         }
 
         // Distribute exercises proportionally among muscle groups
@@ -848,14 +923,15 @@
         // Ensure that the first exercises use the highest priority available equipment
         selectedExercises = prioritizeExercises(selectedExercises);
 
-        // Assign sets and reps based on user experience level
+        // Assign sets, reps, and %1RM based on user experience level
         selectedExercises = selectedExercises.map(ex => {
             const primaryEquipment = sortedEquipment.find(eq => ex.equipment.includes(eq)) || ex.equipment[0];
             const params = getWorkoutParameters(trainingType, primaryEquipment, ex.isCompound, userExperience);
             return {
                 ...ex,
                 sets: params.sets,
-                reps: params.reps
+                reps: params.reps,
+                oneRM: params.oneRM
             };
         });
 
@@ -872,6 +948,7 @@
                     <span>Muscle Group: ${exercise.muscleGroup}</span>
                     <span>Equipment: ${exercise.equipment.join(', ')}</span>
                     <span>Sets: ${exercise.sets}, Reps: ${exercise.reps}</span>
+                    <span>%1RM: ${exercise.oneRM}%</span>
                 </div>
             `;
         });
