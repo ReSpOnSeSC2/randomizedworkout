@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Workout Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px 30px;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        /* Flex Layout for Form Sections */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+        }
+        /* Checkbox and Radio Groups */
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .checkbox-group label, .radio-group label {
+            font-weight: normal;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .checkbox-group input, .radio-group input {
+            margin-right: 5px;
+            width: 18px;
+            height: 18px;
+        }
+        /* Number Input */
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        /* Button Styles */
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        /* Workout Plan Styles */
+        #workoutPlan {
+            margin-top: 30px;
+        }
+        .exercise {
+            background-color: #e9e9e9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .exercise strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .exercise span {
+            display: block;
+            font-size: 14px;
+            color: #555;
+        }
+        .no-exercises {
+            text-align: center;
+            color: red;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px 20px;
+            }
+            h1, h2 {
+                font-size: 20px;
+            }
+            label {
+                font-size: 14px;
+            }
+            .exercise strong {
+                font-size: 16px;
+            }
+            .exercise span {
+                font-size: 12px;
+            }
+            button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .checkbox-group, .radio-group {
+                flex-direction: column;
+            }
+            .checkbox-group label, .radio-group label {
+                font-size: 14px;
+            }
+            input[type="number"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Advanced Workout Generator</h1>
+    <form id="workoutForm">
+        <!-- Experience Level Section -->
+        <div class="form-section">
+            <label>Select Your Experience Level:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="experienceLevel" value="beginner" required> Beginner</label>
+                <label><input type="radio" name="experienceLevel" value="intermediate"> Intermediate</label>
+                <label><input type="radio" name="experienceLevel" value="advanced"> Advanced</label>
+            </div>
+        </div>
+
+        <!-- Training Type Section -->
+        <div class="form-section">
+            <label>Select Training Type:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="trainingType" value="strength" required> Strength</label>
+                <label><input type="radio" name="trainingType" value="hypertrophy"> Hypertrophy</label>
+            </div>
+        </div>
+
+        <!-- Muscle Groups Section -->
+        <div class="form-section">
+            <label>Select Muscle Groups:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="muscleGroup" value="chest"> Chest</label>
+                <label><input type="checkbox" name="muscleGroup" value="back"> Back</label>
+                <label><input type="checkbox" name="muscleGroup" value="legs"> Legs</label>
+                <label><input type="checkbox" name="muscleGroup" value="shoulders"> Shoulders</label>
+                <label><input type="checkbox" name="muscleGroup" value="biceps"> Biceps</label>
+                <label><input type="checkbox" name="muscleGroup" value="triceps"> Triceps</label>
+                <label><input type="checkbox" name="muscleGroup" value="hamstrings"> Hamstrings</label>
+                <label><input type="checkbox" name="muscleGroup" value="glutes"> Glutes</label>
+                <label><input type="checkbox" name="muscleGroup" value="calves"> Calves</label>
+                <label><input type="checkbox" name="muscleGroup" value="abs"> Abs</label>
+            </div>
+        </div>
+
+        <!-- Time Available Section -->
+        <div class="form-section">
+            <label for="timeAvailable">Time Available (minutes):</label>
+            <input type="number" id="timeAvailable" min="0" max="180" step="15" required>
+        </div>
+
+        <!-- Available Equipment Section -->
+        <div class="form-section">
+            <label>Select Available Equipment:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="equipment" value="barbell"> Barbell</label>
+                <label><input type="checkbox" name="equipment" value="dumbbell"> Dumbbell</label>
+                <label><input type="checkbox" name="equipment" value="cable"> Cable Machine</label>
+                <label><input type="checkbox" name="equipment" value="resistance band"> Resistance Band</label>
+                <label><input type="checkbox" name="equipment" value="stability ball"> Stability Ball</label>
+                <label><input type="checkbox" name="equipment" value="trx"> TRX/Suspension Trainer</label>
+                <label><input type="checkbox" name="equipment" value="bodyweight"> Bodyweight</label>
+                <label><input type="checkbox" name="equipment" value="medicine ball"> Medicine Ball</label>
+            </div>
+        </div>
+
+        <button type="submit">Generate Workout</button>
+    </form>
+
+    <div id="workoutPlan"></div>
+</div>
+
+<script>
+    const exercises = {
+        chest: [
+            // Main Compound Exercises
+            { name: "Barbell Bench Press", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: true },
+            { name: "Incline Barbell Bench Press", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: true },
+            { name: "Decline Barbell Bench Press", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Dumbbell Chest Fly (Flat)", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Incline Dumbbell Chest Fly", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Dumbbell Pullover", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Dumbbell Squeeze Press", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Dumbbell Floor Press", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Chest", isCompound: false },
+            { name: "Dumbbell Around-the-World", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+            { name: "Dumbbell Hex Press", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Flat Cable Chest Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Incline Cable Chest Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Chest Fly (High-to-Low)", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Chest Fly (Low-to-High)", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Standing Cable Chest Fly (Mid-Level)", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Single-Arm Cable Chest Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Crossover", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Squeeze Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Pullover", equipment: ["cable"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Cable Punch Press", equipment: ["cable"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+            { name: "Push-Ups (Standard)", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Chest", isCompound: false },
+            { name: "Wide-Grip Push-Ups", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Chest", isCompound: false },
+            { name: "Incline Push-Ups", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Chest", isCompound: false },
+            { name: "Decline Push-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Plyometric Push-Ups", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+            { name: "Chest Dips (Using Bench or Parallel Bars)", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Archer Push-Ups", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+            { name: "Spiderman Push-Ups", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+            { name: "Resistance Band Push-Ups", equipment: ["resistance band"], experience: "intermediate", muscleGroup: "Chest", isCompound: false },
+            { name: "Isometric Hold Push-Up", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Chest", isCompound: false },
+        ],
+
+        back: [
+            // Main Compound Exercises
+            { name: "Barbell Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Bent-Over Row", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Pull-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Chin-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell T-Bar Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Dumbbell Bent-Over Rows", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Single-Arm Dumbbell Rows", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Deadlifts", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Romanian Deadlifts", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Reverse Fly", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Shrugs", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell High Pulls", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Y Raise", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Renegade Rows", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Dumbbell Seal Rows (lying on a bench)", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Seated Cable Rows", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Lat Pulldowns", equipment: ["cable"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Straight-Arm Cable Pulldown", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Cable Face Pulls", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Single-Arm Cable Rows", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Reverse Cable Fly", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Cable Shrugs", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "High-to-Low Cable Rows", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Cable Rear Delt Pulls", equipment: ["cable"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Cable Standing Lat Pushdowns", equipment: ["cable"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Chin-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Inverted Rows", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Dead Hangs", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Australian Rows", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Superman Holds", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Plank Row Holds (with dumbbells)", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Bodyweight Reverse Fly", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Isometric Row Hold", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Bent-Over Row", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Pendlay Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Yates Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Single-Arm Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell T-Bar Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Shrugs", equipment: ["barbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Snatch Grip Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell High Pull", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Upright Row", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Seal Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Reverse Grip Bent-Over Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Chest-Supported Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Meadows Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Dead Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Wide-Grip Row", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Incline Chest Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Overhand Shrug", equipment: ["barbell"], experience: "beginner", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Power Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Good Morning", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Jefferson Curl", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Tempo Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Deficit Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Seal Shrug", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Rack Pull", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Back", isCompound: true },
+            { name: "Barbell Shrug and Row Combo", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Landmine One-Arm Row", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Trap Raise", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+            { name: "Barbell Incline Pull", equipment: ["barbell"], experience: "advanced", muscleGroup: "Back", isCompound: false },
+        ],
+
+        legs: [
+            // Main Compound Exercises
+            { name: "Barbell Back Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Front Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Romanian Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Lunges", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Dumbbell Squats", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Bulgarian Split Squats", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Step-Ups", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Deadlifts", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Romanian Deadlifts", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Goblet Squats", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Front Squats", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Side Lunges", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Walking Lunges", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Dumbbell Calf Raises", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Squats", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Romanian Deadlifts", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Step-Back Lunges", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Side Lunges", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Kickbacks", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Pull-Throughs", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Single-Leg Deadlifts", equipment: ["cable"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Adductor/Abductor Leg Lifts", equipment: ["cable"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Sissy Squats", equipment: ["cable"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Cable Reverse Hack Squats", equipment: ["cable"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Bodyweight Squats", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Bodyweight Bulgarian Split Squats", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Wall Sits", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Jump Squats", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Box Jumps", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Step-Ups", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Calf Raises", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Isometric Lunge Holds", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Pistol Squats", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Glute Bridges", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Front Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Goblet Squat", equipment: ["barbell"], experience: "beginner", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Sumo Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Overhead Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Jefferson Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Zercher Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Box Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Jump Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Hack Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Stiff-Leg Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Good Morning", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Lunge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Step-Up", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Side Lunge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Curtsy Lunge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Split Stance Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Deficit Lunge", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Shrimp Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Glute Bridge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Hip Thrust", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Walking Lunge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Farmer Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Pause Squat", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Single-Leg Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: true },
+            { name: "Barbell Zercher Good Morning", equipment: ["barbell"], experience: "advanced", muscleGroup: "Legs", isCompound: false },
+            { name: "Barbell Calf Raise", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Legs", isCompound: false },
+        ],
+
+        shoulders: [
+            // Main Compound Exercises
+            { name: "Barbell Overhead Press", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: true },
+            { name: "Dumbbell Shoulder Press", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: true },
+            { name: "Push Press", equipment: ["barbell"], experience: "advanced", muscleGroup: "Shoulders", isCompound: true },
+            { name: "Arnold Press", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Shoulders", isCompound: true },
+            { name: "Seated Dumbbell Press", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Dumbbell Lateral Raises", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Cable Lateral Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Front Dumbbell Raises", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Rear Delt Flyes", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Face Pulls", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Upright Rows", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Dumbbell Shrugs", equipment: ["dumbbell"], experience: "beginner", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Cable Shrugs", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Dumbbell Front Raises", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Machine Shoulder Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Single-Arm Cable Front Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Dumbbell Reverse Flyes", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Cable Rear Delt Flyes", equipment: ["cable"], experience: "intermediate", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Dumbbell Arnold Press", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Shoulders", isCompound: false },
+            { name: "Standing Military Press", equipment: ["barbell"], experience: "advanced", muscleGroup: "Shoulders", isCompound: false },
+        ],
+
+        biceps: [
+            // Main Compound Exercises
+            { name: "Barbell Curl", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: true },
+            { name: "Dumbbell Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: true },
+            { name: "Hammer Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: true },
+            { name: "Chin-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Biceps", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Preacher Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Concentration Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Cable Curl", equipment: ["cable"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Incline Dumbbell Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Cable Hammer Curl", equipment: ["cable"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "EZ-Bar Curl", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Reverse Curl", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Cable Concentration Curl", equipment: ["cable"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Spider Curl", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Biceps", isCompound: false },
+            { name: "Zottman Curl", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Biceps", isCompound: false },
+            { name: "Drag Curl", equipment: ["barbell"], experience: "advanced", muscleGroup: "Biceps", isCompound: false },
+            { name: "Single-Arm Cable Curl", equipment: ["cable"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Machine Bicep Curl", equipment: ["cable"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Standing Alternating Dumbbell Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+            { name: "Seated Alternating Dumbbell Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Biceps", isCompound: false },
+        ],
+
+        triceps: [
+            // Main Compound Exercises
+            { name: "Close-Grip Barbell Bench Press", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: true },
+            { name: "Dips", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Triceps", isCompound: true },
+            { name: "Diamond Push-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Triceps", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Tricep Pushdowns", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Overhead Dumbbell Extension", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Skull Crushers", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Dumbbell Kickbacks", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Cable Overhead Tricep Extension", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Bench Dips", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Tricep Rope Pushdowns", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Incline Dumbbell Tricep Extension", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Single-Arm Overhead Cable Extension", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Reverse Grip Tricep Pushdown", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Dumbbell Floor Press", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Cable Bench Press", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Dumbbell Tate Press", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Triceps", isCompound: false },
+            { name: "Cable Kickbacks", equipment: ["cable"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+            { name: "Barbell Tricep Extension", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Triceps", isCompound: false },
+        ],
+
+        hamstrings: [
+            // Main Compound Exercises
+            { name: "Barbell Romanian Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: true },
+            { name: "Barbell Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: true },
+            { name: "Dumbbell Romanian Deadlift", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: true },
+            { name: "Sumo Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: true },
+            { name: "Good Mornings", equipment: ["barbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Leg Curls", equipment: ["cable"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Standing Dumbbell Hamstring Curl", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Single-Leg Romanian Deadlift", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Glute-Ham Raises", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Cable Pull-Throughs", equipment: ["cable"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Stability Ball Leg Curls", equipment: ["stability ball"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Dumbbell Step-Ups", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Kettlebell Swings", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Cable Single-Leg Deadlift", equipment: ["cable"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Reverse Hyperextensions", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Dumbbell Lunges", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Cable Kickbacks", equipment: ["cable"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Barbell Single-Leg Deadlift", equipment: ["barbell"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Nordic Hamstring Curl", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Hamstrings", isCompound: false },
+            { name: "Single-Leg Glute Bridge", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Hamstrings", isCompound: false },
+        ],
+
+        glutes: [
+            // Main Compound Exercises
+            { name: "Barbell Hip Thrust", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: true },
+            { name: "Barbell Glute Bridge", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: true },
+            { name: "Dumbbell Bulgarian Split Squat", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: true },
+            { name: "Barbell Deadlift", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: true },
+            { name: "Barbell Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Cable Kickbacks", equipment: ["cable"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Dumbbell Step-Ups", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Kettlebell Swings", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Single-Leg Romanian Deadlift", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Cable Pull-Throughs", equipment: ["cable"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Glute-Ham Raises", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Dumbbell Lunges", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Stability Ball Leg Curls", equipment: ["stability ball"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Cable Single-Leg Deadlift", equipment: ["cable"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Reverse Hyperextensions", equipment: ["bodyweight"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Dumbbell Sumo Squats", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Single-Leg Glute Bridge", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Barbell Split Squat", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+            { name: "Dumbbell Curtsy Lunge", equipment: ["dumbbell"], experience: "advanced", muscleGroup: "Glutes", isCompound: false },
+            { name: "Cable Abductor/Adductor", equipment: ["cable"], experience: "intermediate", muscleGroup: "Glutes", isCompound: false },
+        ],
+
+        calves: [
+            // Main Compound Exercises
+            { name: "Barbell Calf Raise", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Calves", isCompound: true },
+            { name: "Dumbbell Calf Raise", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Calves", isCompound: true },
+            { name: "Standing Calf Raises", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: true },
+            { name: "Seated Calf Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Single-Leg Calf Raise", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Donkey Calf Raises", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Leg Press Calf Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Cable Seated Calf Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Machine Calf Raises", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Smith Machine Calf Raises", equipment: ["barbell"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Toe Presses", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Calf Press on Leg Machine", equipment: ["cable"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Standing Dumbbell Calf Raises", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Single-Leg Seated Calf Raise", equipment: ["cable"], experience: "advanced", muscleGroup: "Calves", isCompound: false },
+            { name: "Jump Rope", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Box Jumps", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Calf Raises on Step", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Elevated Calf Raises", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+            { name: "Toe Taps", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Calves", isCompound: false },
+        ],
+
+        abs: [
+            // Main Compound Exercises
+            { name: "Hanging Leg Raises", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: true },
+            { name: "Barbell Rollouts", equipment: ["barbell"], experience: "advanced", muscleGroup: "Abs", isCompound: true },
+            { name: "Plank", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: true },
+            { name: "Russian Twists", equipment: ["dumbbell"], experience: "intermediate", muscleGroup: "Abs", isCompound: true },
+
+            // Accessory Exercises
+            { name: "Crunches", equipment: ["bodyweight"], experience: "beginner", muscleGroup: "Abs", isCompound: false },
+            { name: "Bicycle Crunches", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Cable Crunches", equipment: ["cable"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Reverse Crunches", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Side Plank", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Leg Raises on Bench", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Ab Wheel Rollouts", equipment: ["barbell"], experience: "advanced", muscleGroup: "Abs", isCompound: false },
+            { name: "Mountain Climbers", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Medicine Ball Slams", equipment: ["medicine ball"], experience: "advanced", muscleGroup: "Abs", isCompound: false },
+            { name: "V-Ups", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Flutter Kicks", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Toe Touches", equipment: ["bodyweight"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Woodchoppers", equipment: ["cable"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Cable Oblique Crunch", equipment: ["cable"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+            { name: "Stability Ball Crunches", equipment: ["stability ball"], experience: "intermediate", muscleGroup: "Abs", isCompound: false },
+        ],
+    };
+
+    // Equipment Priority Array
+    const equipmentPriorityOrder = ['barbell', 'dumbbell', 'cable', 'resistance band', 'stability ball', 'trx', 'bodyweight', 'medicine ball'];
+
+    // Experience Level Mapping
+    const experienceLevelMap = {
+        'beginner': 1,
+        'intermediate': 2,
+        'advanced': 3
+    };
+
+    // Function to assign sets and reps based on training type, equipment, exercise type, and user experience
+    function getWorkoutParameters(trainingType, equipment, isCompound, userExperience) {
+        let sets, reps;
+
+        // Determine sets based on user experience
+        if (userExperience === 'beginner') {
+            sets = 2;
+        } else if (userExperience === 'intermediate') {
+            sets = 3;
+        } else if (userExperience === 'advanced') {
+            sets = getRandomInt(4, 6);
+        } else {
+            sets = 3; // Default
+        }
+
+        // Determine reps based on training type and exercise type
+        if (trainingType === 'strength') {
+            if (isCompound) {
+                reps = getRandomInt(2, 6);
+            } else {
+                switch (equipment) {
+                    case 'barbell':
+                        reps = getRandomInt(2, 5);
+                        break;
+                    case 'dumbbell':
+                        reps = getRandomInt(6, 8);
+                        break;
+                    case 'cable':
+                        reps = getRandomInt(12, 15);
+                        break;
+                    default:
+                        reps = getRandomInt(6, 8);
+                }
+            }
+        } else if (trainingType === 'hypertrophy') {
+            if (isCompound) {
+                reps = getRandomInt(6, 8);
+            } else {
+                switch (equipment) {
+                    case 'barbell':
+                        reps = getRandomInt(6, 8);
+                        break;
+                    case 'dumbbell':
+                        reps = getRandomInt(8, 12);
+                        break;
+                    case 'cable':
+                        reps = getRandomInt(12, 15);
+                        break;
+                    default:
+                        reps = getRandomInt(10, 15);
+                }
+            }
+        } else {
+            // Default reps if training type is not recognized
+            reps = 10;
+        }
+
+        return { sets, reps };
+    }
+
+    // Utility function to get random integer between min and max (inclusive)
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    document.getElementById('workoutForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get User Experience Level
+        const experienceRadio = document.querySelector('input[name="experienceLevel"]:checked');
+        const userExperience = experienceRadio ? experienceRadio.value : '';
+
+        // Get Training Type
+        const trainingTypeRadio = document.querySelector('input[name="trainingType"]:checked');
+        const trainingType = trainingTypeRadio ? trainingTypeRadio.value : '';
+
+        // Get Selected Muscle Groups
+        const muscleGroupCheckboxes = document.querySelectorAll('input[name="muscleGroup"]:checked');
+        const muscleGroups = Array.from(muscleGroupCheckboxes).map(cb => cb.value);
+
+        // Get Time Available
+        const timeAvailableInput = document.getElementById('timeAvailable').value;
+        const timeAvailable = parseInt(timeAvailableInput);
+
+        // Get Available Equipment
+        const equipmentCheckboxes = document.querySelectorAll('input[name="equipment"]:checked');
+        const equipmentOptions = Array.from(equipmentCheckboxes).map(cb => cb.value);
+
+        // Validation
+        if (userExperience === '') {
+            alert('Please select your experience level.');
+            return;
+        }
+
+        if (trainingType === '') {
+            alert('Please select a training type.');
+            return;
+        }
+
+        if (muscleGroups.length === 0) {
+            alert('Please select at least one muscle group.');
+            return;
+        }
+
+        if (isNaN(timeAvailable) || timeAvailable < 0) {
+            alert('Please enter a valid time available.');
+            return;
+        }
+
+        if (equipmentOptions.length === 0) {
+            alert('Please select at least one equipment option.');
+            return;
+        }
+
+        // Determine number of exercises based on time
+        let totalExercises;
+        if (timeAvailable <= 15) {
+            totalExercises = 2;
+        } else if (timeAvailable <= 30) {
+            totalExercises = 4;
+        } else if (timeAvailable <= 45) {
+            totalExercises = 6;
+        } else if (timeAvailable <= 60) {
+            totalExercises = 7;
+        } else {
+            totalExercises = 8;
+        }
+
+        // Distribute exercises proportionally among muscle groups
+        const numMuscleGroups = muscleGroups.length;
+        const baseExercisesPerGroup = Math.floor(totalExercises / numMuscleGroups);
+        let remainingExercises = totalExercises % numMuscleGroups;
+
+        const exercisesPerGroup = {};
+        muscleGroups.forEach(group => {
+            exercisesPerGroup[group] = baseExercisesPerGroup;
+        });
+
+        // Distribute remaining exercises one by one
+        for (let i = 0; i < remainingExercises; i++) {
+            const group = muscleGroups[i % numMuscleGroups];
+            exercisesPerGroup[group]++;
+        }
+
+        // Sort equipment options based on priority
+        const sortedEquipment = equipmentOptions.slice().sort((a, b) => {
+            return equipmentPriorityOrder.indexOf(a) - equipmentPriorityOrder.indexOf(b);
+        });
+
+        // Function to prioritize exercises based on equipment priority
+        function prioritizeExercises(exercisesList) {
+            return exercisesList.sort((a, b) => {
+                let aPriority = equipmentPriorityOrder.indexOf(a.equipment[0]);
+                let bPriority = equipmentPriorityOrder.indexOf(b.equipment[0]);
+                return aPriority - bPriority;
+            });
+        }
+
+        // Collect exercises for each muscle group
+        let selectedExercises = [];
+
+        muscleGroups.forEach(group => {
+            const requiredExercises = exercisesPerGroup[group];
+            if (requiredExercises === 0) return;
+
+            // Filter exercises based on user experience level
+            const userExpLevel = experienceLevelMap[userExperience];
+            let availableExercises = exercises[group].filter(ex => {
+                return equipmentOptions.includes(ex.equipment[0]) && (experienceLevelMap[ex.experience] <= userExpLevel);
+            });
+
+            // Prioritize equipment
+            availableExercises = prioritizeExercises(availableExercises);
+
+            // Separate compound and accessory exercises
+            const compoundExercises = availableExercises.filter(ex => ex.isCompound);
+            const accessoryExercises = availableExercises.filter(ex => !ex.isCompound);
+
+            let groupExercises = [];
+
+            // Add compound exercises first
+            if (compoundExercises.length > 0) {
+                groupExercises = groupExercises.concat(shuffleArray(compoundExercises));
+            }
+
+            // Then add accessory exercises
+            if (groupExercises.length < requiredExercises && accessoryExercises.length > 0) {
+                groupExercises = groupExercises.concat(shuffleArray(accessoryExercises));
+            }
+
+            // Select required number of exercises
+            groupExercises = groupExercises.slice(0, requiredExercises);
+
+            selectedExercises = selectedExercises.concat(groupExercises);
+        });
+
+        // If not enough exercises are selected, fill with remaining accessory exercises
+        if (selectedExercises.length < totalExercises) {
+            let remaining = totalExercises - selectedExercises.length;
+            // Gather all possible accessory exercises from all selected muscle groups
+            let allAccessory = [];
+            muscleGroups.forEach(group => {
+                const userExpLevel = experienceLevelMap[userExperience];
+                const accessory = exercises[group].filter(ex => {
+                    return equipmentOptions.includes(ex.equipment[0]) && !ex.isCompound && (experienceLevelMap[ex.experience] <= userExpLevel);
+                });
+                allAccessory = allAccessory.concat(accessory);
+            });
+
+            // Prioritize equipment
+            allAccessory = prioritizeExercises(allAccessory);
+
+            // Shuffle
+            allAccessory = shuffleArray(allAccessory);
+
+            // Select remaining exercises
+            selectedExercises = selectedExercises.concat(allAccessory.slice(0, remaining));
+        }
+
+        // Final check
+        if (selectedExercises.length === 0) {
+            alert('No exercises match your selection. Please adjust your options.');
+            return;
+        }
+
+        // Sort selected exercises based on equipment priority
+        selectedExercises = selectedExercises.sort((a, b) => {
+            let aPriority = equipmentPriorityOrder.indexOf(a.equipment[0]);
+            let bPriority = equipmentPriorityOrder.indexOf(b.equipment[0]);
+            return aPriority - bPriority;
+        });
+
+        // Ensure that the first exercise uses the highest priority available equipment
+        selectedExercises = prioritizeExercises(selectedExercises);
+
+        // Assign sets and reps based on user experience level
+        selectedExercises = selectedExercises.map(ex => {
+            const primaryEquipment = sortedEquipment.find(eq => ex.equipment.includes(eq)) || ex.equipment[0];
+            const params = getWorkoutParameters(trainingType, primaryEquipment, ex.isCompound, userExperience);
+            return {
+                ...ex,
+                sets: params.sets,
+                reps: params.reps
+            };
+        });
+
+        // Display the workout plan
+        const workoutPlanDiv = document.getElementById('workoutPlan');
+        workoutPlanDiv.innerHTML = '';
+
+        workoutPlanDiv.innerHTML = '<h2>Your Workout Plan</h2>';
+
+        selectedExercises.forEach(exercise => {
+            workoutPlanDiv.innerHTML += `
+                <div class="exercise">
+                    <strong>${exercise.name} (${exercise.isCompound ? 'Main Compound' : 'Accessory'})</strong>
+                    <span>Muscle Group: ${exercise.muscleGroup}</span>
+                    <span>Equipment: ${exercise.equipment.join(', ')}</span>
+                    <span>Sets: ${exercise.sets}, Reps: ${exercise.reps}</span>
+                </div>
+            `;
+        });
+
+        // Scroll to workout plan
+        workoutPlanDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Utility function to shuffle an array
+    function shuffleArray(array) {
+        const arr = array.slice();
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = getRandomInt(0, i);
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+</script>
+
+</body>
+</html>
