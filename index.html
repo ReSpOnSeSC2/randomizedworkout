@@ -805,7 +805,7 @@
             return;
         }
 
-        // Determine number of exercises based on time
+       // Determine number of exercises based on time
         let totalExercises;
         if (timeAvailable <= 15) {
             totalExercises = 2;
@@ -860,8 +860,7 @@
                 return equipmentOptions.includes(ex.equipment[0]) && (experienceLevelMap[ex.experience] <= userExpLevel);
             });
 
-            // Prioritize equipment
-            availableExercises = prioritizeExercises(availableExercises);
+            if (availableExercises.length === 0) return; // No exercises available for this group
 
             // Separate compound and accessory exercises
             const compoundExercises = availableExercises.filter(ex => ex.isCompound);
@@ -869,17 +868,25 @@
 
             let groupExercises = [];
 
-            // Determine maximum number of compound exercises (max 2)
-            const maxCompound = Math.min(requiredExercises, 2);
+            // Shuffle the compound exercises to introduce randomness
+            const shuffledCompound = shuffleArray(compoundExercises);
+            const shuffledAccessory = shuffleArray(accessoryExercises);
 
-            // Add up to maxCompound compound exercises
-            if (compoundExercises.length > 0) {
-                groupExercises = groupExercises.concat(shuffleArray(compoundExercises).slice(0, maxCompound));
+            // Always select at least one main compound exercise if available
+            if (shuffledCompound.length > 0) {
+                groupExercises.push(shuffledCompound[0]); // Select the first shuffled compound exercise
             }
 
-            // Add accessory exercises to fill the required number of exercises
-            if (groupExercises.length < requiredExercises && accessoryExercises.length > 0) {
-                groupExercises = groupExercises.concat(shuffleArray(accessoryExercises).slice(0, requiredExercises - groupExercises.length));
+            // Select additional main compound exercises up to a maximum (e.g., 2)
+            const maxCompound = Math.min(requiredExercises, 2);
+            for (let i = 1; i < shuffledCompound.length && groupExercises.length < maxCompound; i++) {
+                groupExercises.push(shuffledCompound[i]);
+            }
+
+            // Fill the remaining exercises with accessory exercises
+            const remaining = requiredExercises - groupExercises.length;
+            if (remaining > 0 && shuffledAccessory.length > 0) {
+                groupExercises = groupExercises.concat(shuffledAccessory.slice(0, remaining));
             }
 
             selectedExercises = selectedExercises.concat(groupExercises);
@@ -898,10 +905,8 @@
                 allAccessory = allAccessory.concat(accessory);
             });
 
-            // Prioritize equipment
+            // Shuffle and prioritize equipment
             allAccessory = prioritizeExercises(allAccessory);
-
-            // Shuffle
             allAccessory = shuffleArray(allAccessory);
 
             // Select remaining exercises
@@ -914,14 +919,14 @@
             return;
         }
 
-        // Sort selected exercises based on equipment priority
-        selectedExercises = selectedExercises.sort((a, b) => {
-            let aPriority = equipmentPriorityOrder.indexOf(a.equipment[0]);
-            let bPriority = equipmentPriorityOrder.indexOf(b.equipment[0]);
-            return aPriority - bPriority;
-        });
+        // Remove duplicate exercises
+        selectedExercises = selectedExercises.filter((ex, index, self) =>
+            index === self.findIndex((t) => (
+                t.name === ex.name
+            ))
+        );
 
-        // Ensure that the first exercises use the highest priority available equipment
+        // Sort selected exercises based on equipment priority
         selectedExercises = prioritizeExercises(selectedExercises);
 
         // Assign sets, reps, and %1RM based on user experience level
@@ -967,6 +972,7 @@
         }
         return arr;
     }
+
 </script>
 
 </body>
